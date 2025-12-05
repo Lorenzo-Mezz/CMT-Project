@@ -12,7 +12,7 @@ model = polyfit(year, co2_cc, 2);
 disp(model)
 
 t = []
-future_years = (2026:2050)';
+future_years = (2025:2050)';
 t_min = min(year);  
 for j = 1: length(future_years)
     for i = 1:12
@@ -22,7 +22,7 @@ end
 
 co2_pred = polyval(model, t)
 
-mean_pred = polyval(model, time_continu);
+mean_pred = polyval(model, t);
 co2_future = table(t, co2_pred, 'VariableNames', {'Annee','CO2'});
 disp(co2_future)
 c = [c_table; co2_future];
