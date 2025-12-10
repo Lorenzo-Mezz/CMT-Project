@@ -46,7 +46,6 @@ int read_csv(const char *co2_temp_for_c, DataRow data[], int max_rows) {
             continue;
         }
 
-        // Note: sscanf est utilisé ici comme dans votre code initial
         if (sscanf(line, "%11s,%f,%f,%f,%f", 
                    data[row_count].time, 
                    &data[row_count].surface_temp, 
@@ -215,6 +214,15 @@ void biomass_growth(double* T_array, double ppm_CO2, int *z_index, double dz, do
     free(temperature_z);
 
 }
+double biomass_depth(double B, int z, double dz){
+    double biomass_z = B * irradiance(z, dz) / I0;
+    return biomass_z;
+}
+double biomass(double mu, double dz, int z, double B0){
+    double b = biomass_depth(B0, z, dz) + 30*mu*biomass_depth(B0, z, dz);
+    return b;
+}
+
 
 int main(int argc, char * argv[]) {
     DataRow data[MAX_ROWS]; 
@@ -233,36 +241,46 @@ int main(int argc, char * argv[]) {
     double dt = 500; // Pas de temps (secondes) - Choisir dt pour r <= 0.5 (ici r ~ 0.4)
     int n_points = 195; // Nombre de points dans l'espace, beacause bottom temperature was taken at 195m
     int n_steps = 10000;  // Nombre de pas de temps (simule environ 11 jours)
-    
-        // Affichage des paramètres initiaux
-    double r_value = alpha * dt / (dz * dz); 
 
-    // Extraction des données du CSV
+    double r_value = alpha * dt / (dz * dz); //calcul du facteur de stabilité pour la diffusion
+
+    // Extraction des données du CSV initial
     double* surfacetemp = (double*)malloc(n_csv * sizeof(double));
     double* bottomtemp = (double*)malloc(n_csv * sizeof(double));
     double* atmco2 = (double*)malloc(n_csv * sizeof(double));
     double* surfacebiomass = (double*)malloc(n_csv * sizeof(double));
     double* T = (double*)malloc(n_points * sizeof(double));
 
+    //création de z_index, tableaux des profondeurs pour la fonction biomass_growth
     int *z_index = (int*)malloc(n_depth * sizeof(int));
-
     int z_values[] = {0, 1, 2, 5, 10, 30};  // Valeurs à assigner à z_index
     for (int i = 0; i < n_depth; i++) {
         z_index[i] = z_values[i]; // Initialisation avec les valeurs
     }
+
+    // création du CSV qui stocke les valeurs de biomass_growth
     FILE* output_csv = fopen("biomass_growth_results.csv", "w");
     if (output_csv == NULL) {
         printf("Erreur lors de l'ouverture du fichier de sortie.\n");
         return 1;
     }
     fprintf(output_csv, "Index, Time, Depth_0,Depth_1,Depth_2,Depth_5,Depth_10,Depth_30\n");
+
+    // création du CSV qui stocke les valeurs de biomasse
+    FILE* outputcsv = fopen("biomass_results.csv", "w");
+    if (outputcsv == NULL) {
+        printf("Erreur lors de l'ouverture du fichier de sortie.\n");
+        return 1;
+    }
+    fprintf(outputcsv, "Index, Time, Depth_0,Depth_1,Depth_2,Depth_5,Depth_10,Depth_30\n");
+
     for (int j = 1; j < n_csv; j++) {
         surfacetemp[j] = data[j].surface_temp;
         bottomtemp[j] = data[j].bottom_temp;
         atmco2[j] = data[j].atm_co2;
         surfacebiomass[j] = data[j].surface_biomass;
-            // Initialisation du tableau de températures
         
+        // Initialisation du tableau de températures
         if (T == NULL) {
             printf("Erreur d'allocation mémoire pour T.\n");
         return 1;
@@ -282,27 +300,36 @@ int main(int argc, char * argv[]) {
                 T[i] = (surface_temp_j + bottom_temp_j) / 2;  // Température initiale pour les autres points
             }
         }
+
+        // Calcul de la diffusion thermique pour cet instant
         diffusion_1d(T, alpha, dt, dz, n_points, n_steps);
+        printf("\n--- Simulation de diffusion thermique pour le temps %d ---\n", j);
+        printf("Température à la surface (T[0]): %.2f C\n", T[0]);
+        printf("Température au fond (T[n_points-1]): %.2f C\n", T[n_points-1]);
+
         double growth_rate_output[n_depth];
+        biomass_growth(T, atmco2[j], z_index, dz, growth_rate_output); // Appel de la fonction biomasse et récupération des résultats
 
-        // Appel de la fonction biomasse et récupération des résultats
-        biomass_growth(T, atmco2[j], z_index, dz, growth_rate_output);
-
-        // Écriture des résultats dans le fichier CSV
+        // Écriture des résultats dans le 1 er fichier CSV
         fprintf(output_csv, "%d,%s", j + 1, data[j].time);  // Temps
         for (int i = 0; i < n_depth; i++) {
             fprintf(output_csv, ",%.30f", growth_rate_output[i]);  // Valeur de croissance pour chaque profondeur
         }
         fprintf(output_csv, "\n");
 
-        // Calcul de la diffusion thermique pour cet instant
-        printf("\n--- Simulation de diffusion thermique pour le temps %d ---\n", j);
-    
-        printf("Température à la surface (T[0]): %.2f C\n", T[0]);
-        printf("Température au fond (T[n_points-1]): %.2f C\n", T[n_points-1]);
+        // Écriture des résultats dans le 2 eme fichier CSV
+        fprintf(outputcsv, "%d,%s", j + 1, data[j].time);  // Temps
+        for (int i = 0; i < n_depth; i++) {
+            double biom = biomass(growth_rate_output[i], dz, z_index[i], surfacebiomass[1]);
+            fprintf(outputcsv, ",%.30f", biom); 
+        }
 
+        fprintf(outputcsv, "\n");
     }
     fclose(output_csv);
+    fclose(outputcsv);
+
+    //Affichage des paramètres de la simulation de la diffusion
     printf("Parametres de simulation:\n");
     printf("  dt (Pas de temps): %.1f s\n", dt);
     printf("  n_steps (Total): %d\n", n_steps);
@@ -337,7 +364,6 @@ int main(int argc, char * argv[]) {
         printf("Irradiance (Iz/I0): %f\n", Iz_ratio[i]);
     }
 
-    
     // Libération de la mémoire allouée
     free(depth_m);
     free(T_final);
