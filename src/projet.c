@@ -259,7 +259,7 @@ int main(int argc, char * argv[]) {
     }
 
     // création du CSV qui stocke les valeurs de biomass_growth
-    FILE* output_csv = fopen("biomass_growth_results.csv", "w");
+    FILE* output_csv = fopen("../data/biomass_growth_results.csv", "w");
     if (output_csv == NULL) {
         printf("Erreur lors de l'ouverture du fichier de sortie.\n");
         return 1;
@@ -267,7 +267,7 @@ int main(int argc, char * argv[]) {
     fprintf(output_csv, "Index, Time, Depth_0,Depth_1,Depth_2,Depth_5,Depth_10,Depth_30\n");
 
     // création du CSV qui stocke les valeurs de biomasse
-    FILE* outputcsv = fopen("biomass_results.csv", "w");
+    FILE* outputcsv = fopen("../data/biomass_results.csv", "w");
     if (outputcsv == NULL) {
         printf("Erreur lors de l'ouverture du fichier de sortie.\n");
         return 1;

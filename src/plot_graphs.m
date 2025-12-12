@@ -23,3 +23,4 @@ title('Algal Growth at varying Depths');
 legend;
 
 grid on;
+saveas(growth_rate, "../results/algal_growth_plot.png");

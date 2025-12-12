@@ -1,3 +1,3 @@
-/usr/local/bin/matlab-2021b -batch tabletempandco2 
-gcc ../src/projet.c && ./projet -lm
-/usr/local/bin/matlab-2021b -batch plot_graphs > results
+/usr/local/bin/matlab-2021b -batch ./src/tabletempandco2 
+gcc ./src/projet.c -o projet -lm && ./projet
+/usr/local/bin/matlab-2021b -batch ./src/plot_graphs 
