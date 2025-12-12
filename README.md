@@ -26,6 +26,9 @@ The full report is available in the `docs/` directory as **report.pdf**.
 ### Dependencies
 ### Build
 ### Execute
+git clone https://github.com/Lorenzo-Mezz/CMT-Project.git
+cd CMT-Project
+./shellscript.sh
 
 ## Contributors
 
