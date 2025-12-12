@@ -50,6 +50,6 @@ figure
 plot(sf_temp_zug.Time, sf_temp_zug.SurfaceTemperature_degC_, 'Color','b');
 hold on
 plot(future_dates, Y_future, 'Color','b');
-
+saveas(gcf, "../results/surface_temp_plot.png");
 
 
