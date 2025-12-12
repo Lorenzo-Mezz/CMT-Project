@@ -1,4 +1,4 @@
-sf_temp_zug2 = readtable("CTD_monitoring_Lake_Zug_by_Canton_Zugbottom");
+sf_temp_zug2 = readtable("../data/CTD_monitoring_Lake_Zug_by_Canton_Zugbottom");
 plot(sf_temp_zug2.Time, sf_temp_zug2.BottomTemperature_degC_)
 
 sf_apres2006 = sf_temp_zug2(sf_temp_zug2.Time > datetime(2006,03,01), :);

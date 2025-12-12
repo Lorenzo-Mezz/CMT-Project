@@ -226,7 +226,7 @@ double biomass(double mu, double dz, int z, double B0){
 
 int main(int argc, char * argv[]) {
     DataRow data[MAX_ROWS]; 
-    int row_count = read_csv("co2_temp_for_c.csv", data, MAX_ROWS);
+    int row_count = read_csv("../data/co2_temp_for_c.csv", data, MAX_ROWS);
     
     if (row_count <= 1) { 
         if (row_count == -1) {

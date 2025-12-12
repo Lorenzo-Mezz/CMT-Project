@@ -1,4 +1,4 @@
-chlorophyll_zug = readtable("zug_chlorophyll_satellite_summary.csv");
+chlorophyll_zug = readtable("../data/zug_chlorophyll_satellite_summary.csv");
 chl_data = split(chlorophyll_zug.Var1, ',');
 
 dt = datetime(chl_data(:,1), 'InputFormat', 'yyyy-MM-dd''T''HH:mm:ss.SSSX', 'TimeZone','local');

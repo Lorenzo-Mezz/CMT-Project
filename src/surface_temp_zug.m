@@ -1,4 +1,4 @@
-sf_temp_zug = readtable("CTD_monitoring_Lake_Zug_by_Canton_Zug");
+sf_temp_zug = readtable("../data/CTD_monitoring_Lake_Zug_by_Canton_Zug");
 plot(sf_temp_zug.Time, sf_temp_zug.SurfaceTemperature_degC_)
 
 t = convertTo(sf_temp_zug.Time, 'juliandate');

@@ -1,4 +1,4 @@
-co2_data = readtable('co2_annmean_mlo.csv');
+co2_data = readtable('../data/co2_annmean_mlo.csv');
 co2_data.x______________________________________________________________ = [];
 co2_data(1:29,:) = [];
 c = split(co2_data.Var1, ',');
