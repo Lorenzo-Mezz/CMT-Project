@@ -188,7 +188,6 @@ double Ks(double temperature_z) {
 }
 
 void biomass_growth(double* T_array, double ppm_CO2, int *z_index, double dz, double* growth_rate_output){
-    double E_J = E * 4.184; // E en J/mol
     double* temperature_z = (double*)malloc(n_depth * sizeof(double));
     double *iz_val = (double*)malloc(n_depth * sizeof(double));
     double *ks_val = (double*)malloc(n_depth * sizeof(double));
@@ -202,7 +201,7 @@ void biomass_growth(double* T_array, double ppm_CO2, int *z_index, double dz, do
         diss_co2[i] = convertCO2(ppm_CO2, temperature_z[i]); //Termes dépendant de T et CO2
 
         // Formule complète :
-        growth_rate[i] = A * exp(-E_J/(R * temp(temperature_z[i]))) * (diss_co2[i] / (diss_co2[i] + ks_val[i])) * (iz_val[i] / I0); 
+        growth_rate[i] = A * exp(-E/(R * temp(temperature_z[i]))) * (diss_co2[i] / (diss_co2[i] + ks_val[i])) * (iz_val[i] / I0); 
         growth_rate_output[i] = growth_rate[i]; 
         
     }              
@@ -320,8 +319,10 @@ int main(int argc, char * argv[]) {
         // Écriture des résultats dans le 2 eme fichier CSV
         fprintf(outputcsv, "%d,%s", j + 1, data[j].time);  // Temps
         for (int i = 0; i < n_depth; i++) {
-            double biom = biomass(growth_rate_output[i], dz, z_index[i], surfacebiomass[1]);
-            fprintf(outputcsv, ",%.30f", biom); 
+            for (int j = 0; j < n_csv; j++){
+                double biom = biomass(growth_rate_output[i], dz, z_index[i], surfacebiomass[1]);
+                fprintf(outputcsv, ",%.30f", biom); 
+            }
         }
 
         fprintf(outputcsv, "\n");
