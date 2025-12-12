@@ -1,3 +1,3 @@
-/usr/local/bin/matlab-2021b -batch ./src/tabletempandco2 
+/usr/local/bin/matlab-2021b -batch "run('src/tabletempandco2.m')"
 gcc ./src/projet.c -o projet -lm && ./projet
-/usr/local/bin/matlab-2021b -batch ./src/plot_graphs 
+/usr/local/bin/matlab-2021b -batch "run('src/plot_graphs.m')"
