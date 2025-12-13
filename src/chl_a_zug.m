@@ -72,12 +72,18 @@ plot(dt_sorted, chl_a_sorted, 'Color','b')
 hold on
 plot(future_dates, chl_a_future, 'Color','b')
 
+xlabel('Time');
+ylabel('Chlorophyll-a (micrograms/m3)');
+title('Chlorophyll-a Prediction at Surface');
+
+saveas(gcf, "../data/chl_a_pred.png");
+
 figure
 biomass_future = chl_a_future/0.015;
 plot(future_dates', biomass_future)
 
 xlabel('Time');
-ylabel('Biomass (micrograms/m3)');
+ylabel('Biomass (mg/m3)');
 title('Biomass Prediciton at Surface');
 
-saveas(gcf, "../data/chl_a_pred.png");
+saveas(gcf, "../data/biomass_surf_pred.png");
