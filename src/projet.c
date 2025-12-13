@@ -318,15 +318,16 @@ int main(int argc, char * argv[]) {
 
         // Écriture des résultats dans le 2 eme fichier CSV
         fprintf(outputcsv, "%d,%s", j + 1, data[j].time);  // Temps
-        for (int i = 0; i < n_depth; i++) {
-            for (int j = 0; j < n_csv; j++){
-                double biom = biomass(growth_rate_output[i], dz, z_index[i], surfacebiomass[1]);
-                fprintf(outputcsv, ",%.30f", biom); 
-            }
+
+        // Boucle pour chaque colonne (n_csv)
+        for (int i = 0; i < n_csv; i++) {
+            double biom = biomass(growth_rate_output[i], dz, z_index[i], surfacebiomass[j]);
+            fprintf(outputcsv, ",%.30f", biom);  // Remplir avec la biomasse calculée
         }
 
-        fprintf(outputcsv, "\n");
+        fprintf(outputcsv, "\n");  // Nouvelle ligne après chaque ligne de profondeur
     }
+    
     fclose(output_csv);
     fclose(outputcsv);
 
@@ -354,10 +355,7 @@ int main(int argc, char * argv[]) {
         Iz_final[i] = irradiance(z_index[i], dz); // Irradiance à la profondeur correspondante
         Iz_ratio[i] = Iz_final[i] / I0;           // Fraction d'irradiance
     }
-    if (z_index == NULL || depth_m == NULL || T_final == NULL || Iz_final == NULL || Iz_ratio == NULL) {
-        printf("Erreur d'allocation mémoire.\n");
-        return 1; // Fin du programme en cas d'échec
-    }
+
     // Affichage des résultats
     for (int i = 0; i < n_depth; i++) {
         printf("Profondeur de calcul (Index T[%d]): %.1f m\n", i, depth_m[i]);
