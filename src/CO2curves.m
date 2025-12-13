@@ -29,3 +29,10 @@ c = [c_table; co2_future];
 
 figure; 
 plot(c.Annee, c.CO2)
+
+xlabel('Time');
+ylabel('Atmospheric CO2 (ppm)');
+title('Atmospheric CO2 Prediction');
+
+saveas(gcf, "../data/co2_pred.png");
+
