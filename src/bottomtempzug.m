@@ -18,3 +18,9 @@ bottom_pred = predict(bot_model, t_future);
 plot(sf_temp_zug2.Time, sf_temp_zug2.BottomTemperature_degC_)
 hold on
 plot(future_dates, bottom_pred)
+
+xlabel('Time');
+ylabel('Temperature');
+title('Bottom Lake Temperature (195 m depth)');
+
+saveas(gcf, "../data/bottom_temp_plot.png");
