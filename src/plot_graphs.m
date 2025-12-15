@@ -17,7 +17,7 @@ plot(dtime, h_10, 'DisplayName', '10 m');
 plot(dtime, h_30, 'DisplayName', '30 m');
 
 xlabel('Time');
-ylabel('Growth (day^-1');
+ylabel('Growth (day^(-1)');
 title('Algal Growth at varying Depths');
 
 legend;
