@@ -239,7 +239,7 @@ int main(int argc, char * argv[]) {
     double dz = 1.0;  // Pas d'espace (m)
     double dt = 500; // Pas de temps (secondes) - Choisir dt pour r <= 0.5 (ici r ~ 0.4)
     int n_points = 195; // Nombre de points dans l'espace, beacause bottom temperature was taken at 195m
-    int n_steps = 10000;  // Nombre de pas de temps (simule environ 11 jours)
+    int n_steps = 10000;  // Nombre de pas de temps (simule environ 58 jours)
 
     double r_value = alpha * dt / (dz * dz); //calcul du facteur de stabilité pour la diffusion
 
