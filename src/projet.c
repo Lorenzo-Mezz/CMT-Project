@@ -319,8 +319,8 @@ int main(int argc, char * argv[]) {
         // Écriture des résultats dans le 2 eme fichier CSV
         fprintf(outputcsv, "%d,%s", j + 1, data[j].time);  // Temps
 
-        // Boucle pour chaque colonne (n_csv)
-        for (int i = 0; i < n_csv; i++) {
+        // Boucle pour chaque colonne 
+        for (int i = 0; i < n_depth; i++) {
             double biom = biomass(growth_rate_output[i], dz, z_index[i], surfacebiomass[j]);
             fprintf(outputcsv, ",%.30f", biom);  // Remplir avec la biomasse calculée
         }
