@@ -26,13 +26,13 @@ grid on;
 saveas(gcf, "../results/algal_growth_plot.png");
 
 biomass_future_prediction = readtable("../data/biomass_results.csv");
-dtime = biomass_future_prediction.Var2;
-d_0 = biomass_future_prediction.Var3;
-d_1 = biomass_future_prediction.Var4;
-d_2 = biomass_future_prediction.Var5;
-d_5 = biomass_future_prediction.Var6;
-d_10 = biomass_future_prediction.Var7;
-d_30 = biomass_future_prediction.Var8;
+dtime = biomass_future_prediction.Time;
+d_0 = biomass_future_prediction.Depth_0;
+d_1 = biomass_future_prediction.Depth_1;
+d_2 = biomass_future_prediction.Depth_2;
+d_5 = biomass_future_prediction.Depth_5;
+d_10 = biomass_future_prediction.Depth_10;
+d_30 = biomass_future_prediction.Depth_30;
 
 figure;
 plot(dtime, d_0, 'DisplayName', '0 m'); hold on;
