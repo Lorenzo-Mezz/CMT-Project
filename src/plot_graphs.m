@@ -17,7 +17,7 @@ plot(dtime, h_10, 'DisplayName', '10 m');
 plot(dtime, h_30, 'DisplayName', '30 m');
 
 xlabel('Time');
-ylabel('Growth');
+ylabel('Growth (day^-1');
 title('Algal Growth at varying Depths');
 
 legend;
@@ -43,7 +43,7 @@ plot(dtime, d_10, 'DisplayName', '10 m');
 plot(dtime, d_30, 'DisplayName', '30 m');
 
 xlabel('Time');
-ylabel('Total Biomass');
+ylabel('Total Biomass (mg/m^3)');
 title('Total Biomass at varying Depths');
 
 legend;
