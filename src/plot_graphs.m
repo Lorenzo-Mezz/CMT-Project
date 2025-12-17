@@ -1,5 +1,7 @@
+% read predicted algal growth rates at different depths from CSV file
 growth_rate_pred = readtable("../data/biomass_growth_results.csv");
 
+% extract time and growth rates at chosen depths
 dtime = growth_rate_pred.Time;
 h_0 = growth_rate_pred.Depth_0;
 h_1 = growth_rate_pred.Depth_1;
@@ -8,6 +10,7 @@ h_5 = growth_rate_pred.Depth_5;
 h_10 = growth_rate_pred.Depth_10;
 h_30 = growth_rate_pred.Depth_30;
 
+% plot algal growth rates over time for chosen depths
 figure;
 plot(dtime, h_0, 'DisplayName', '0 m'); hold on;
 plot(dtime, h_1, 'DisplayName', '1 m');
@@ -25,7 +28,11 @@ legend;
 grid on;
 saveas(gcf, "../results/algal_growth_plot.png");
 
+%% ---------------------------------------------
+% read predicted total biomass at chosen depths
 biomass_future_prediction = readtable("../data/biomass_results.csv");
+
+% extract time and biomass at chosen depths
 dtime = biomass_future_prediction.Time;
 d_0 = biomass_future_prediction.Depth_0;
 d_1 = biomass_future_prediction.Depth_1;
@@ -34,6 +41,7 @@ d_5 = biomass_future_prediction.Depth_5;
 d_10 = biomass_future_prediction.Depth_10;
 d_30 = biomass_future_prediction.Depth_30;
 
+% plot algal biomass over time for chosen depths
 figure;
 plot(dtime, d_0, 'DisplayName', '0 m'); hold on;
 plot(dtime, d_1, 'DisplayName', '1 m');
