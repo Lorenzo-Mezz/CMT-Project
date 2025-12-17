@@ -1,3 +1,4 @@
+% read CSV file and cleaning/rearranging data
 chlorophyll_zug = readtable("../data/zug_chlorophyll_satellite_summary.csv");
 chl_data = split(chlorophyll_zug.Var1, ',');
 
@@ -6,48 +7,56 @@ chl_a = str2double(chl_data(:,3))
 chl_data = table(dt, chl_a)
 dt = datetime(dt, 'TimeZone', 'local');
 
+% removing unrealistically high chlorophyll-a values (outliers)
 keep_index = chl_data.chl_a <= 18;
 chl_data_filtered = chl_data(keep_index, :);
 
 dt_filtered = chl_data_filtered.dt;
 chl_a_filtered = chl_data_filtered.chl_a;
 
+% sorting data 
 [dt_sorted, idx] = sort(dt_filtered);
 dt_sorted.TimeZone = 'UTC';
 chl_a_sorted = chl_a_filtered(idx);
 
+% interesting information, how much was modified, what does the mean look like? potentially useful
 num_removed = size(chl_data, 1) - size(chl_data_filtered, 1);
 disp(['Total data points removed (chl_a > 20): ', num2str(num_removed)]);
-
 moyenne_chla = mean(chl_a);
 disp(['Average Chlorophyll Concentration: ', num2str(moyenne_chla)]);
-
 
 t = convertTo(dt_sorted, 'juliandate');
 t0 = min(t);
 t = t-t0;
 
+% annual frequency (1 cycle per year)
 cpy = 1;
 f = cpy ./ 365.25;
 omega = 2.*pi.*f;
 
+% building the regression design matrix:
+% - linear trend
+% - seasonal sine term
+% - seasonal cosine term
 x = [
     t,...
     sin(omega*t), ...
     cos(omega*t), ...
     ];
 
+% fit a linear + sinusoidal (seasonal) regression model
 returned = fitlm(x,chl_a_sorted);
 
-
-
+% Plot observed chlorophyll-a and fitted model
 figure
 plot(dt_sorted, chl_a_sorted)
 line(dt_sorted, returned.Fitted, 'Color', 'r')
 
+% extract regression coefficients
 coef = returned.Coefficients.Estimate
 
 
+% define future monthly dates for prediction
 future_dates = datetime(2025,11,01):calmonths(1):datetime(2050,10,31);
 future_dates.TimeZone = 'UTC';
 
@@ -55,18 +64,21 @@ t_future = convertTo(future_dates, 'juliandate');
 t_future = t_future - min(t_future);
 t_future = t_future';
 
+% building the future design matrix using the same seasonal terms
 x_future = [
     t_future,...
     sin(omega*t_future), ...
     cos(omega*t_future), ...
     ];, 'Color','b'
 
+% extract intercept coefficient and replicate it to match future time vector length
 coef_1 = coef(1);
-
 coef_1_matrix = repmat(coef_1, 300, 1);
 
+% compute future chlorophyll-a predictions
 chl_a_future = coef_1_matrix + x_future * coef(2:end)  ;
 
+% plot of historical and predicted chlorophyll-a
 figure
 plot(dt_sorted, chl_a_sorted, 'Color','b')
 hold on
@@ -78,6 +90,7 @@ title('Chlorophyll-a Prediction at Surface');
 
 saveas(gcf, "../data/chl_a_pred.png");
 
+% plot of historical and predicted surface biomass from chlorophyll (Environmental Sciences Section et al., 1991)
 figure
 biomass_future = chl_a_future/0.015;
 plot(future_dates', biomass_future)
