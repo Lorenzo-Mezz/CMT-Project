@@ -26,7 +26,7 @@ This project runs on the SIE Linux VDI, running on Matlab 2021b, as well as on C
 ### Build
 The C source file `projet.c` is compiled using `gcc` into a standalone executable, which is placed in the `bin/` directory and executed between two MATLAB stages: a preprocessing step and a final plotting step.
 ### Execute
-git clone https://github.com/Lorenzo-Mezz/CMT-Project.git && cd CMT-Project && chmod +x shellscript.sh && ./shellscript.sh
+chmod +x shellscript.sh && ./shellscript.sh
 
 ## Contributors
 
