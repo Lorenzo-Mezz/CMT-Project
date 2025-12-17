@@ -235,9 +235,9 @@ int main(int argc, char * argv[]) {
         }
         return 1;
     }
-
+    // valeurs pour la diffusion thermique
     double dz = 1.0;  // Pas d'espace (m)
-    double dt = 500; // Pas de temps (secondes) - Choisir dt pour r <= 0.5 (ici r ~ 0.4)
+    double dt = 500; // Pas de temps (secondes) - Choisir dt pour r <= 0.5 
     int n_points = 195; // Nombre de points dans l'espace, beacause bottom temperature was taken at 195m
     int n_steps = 10000;  // Nombre de pas de temps (simule environ 58 jours)
 
@@ -322,7 +322,7 @@ int main(int argc, char * argv[]) {
         // Boucle pour chaque colonne 
         for (int i = 0; i < n_depth; i++) {
             double biom = biomass(growth_rate_output[i], dz, z_index[i], surfacebiomass[j]);
-            fprintf(outputcsv, ",%.30f", biom);  // Remplir avec la biomasse calculée
+            fprintf(outputcsv, ",%.30f", biom);  
         }
 
         fprintf(outputcsv, "\n");  // Nouvelle ligne après chaque ligne de profondeur
@@ -356,7 +356,7 @@ int main(int argc, char * argv[]) {
         Iz_ratio[i] = Iz_final[i] / I0;           // Fraction d'irradiance
     }
 
-    // Affichage des résultats
+    // Affichage des résultats de la fraction d'irradiance et de la profondeur
     for (int i = 0; i < n_depth; i++) {
         printf("Profondeur de calcul (Index T[%d]): %.1f m\n", i, depth_m[i]);
 
